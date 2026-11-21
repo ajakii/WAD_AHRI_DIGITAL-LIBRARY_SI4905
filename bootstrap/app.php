@@ -11,8 +11,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+
+        // Mendaftarkan alias middleware
+        $middleware->alias([
+            'role' => \App\Http\Middleware\CheckRole::class,
+        ]);
+
+        // Mengarahkan pengguna yang belum login
+        $middleware->redirectGuestsTo(fn () => route('login'));
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+    })->create(); 
