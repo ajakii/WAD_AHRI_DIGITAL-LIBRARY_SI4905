@@ -18,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'api.basic' => ApiBasicAuth::class,
         ]);
-         $middleware->redirectGuestsTo(fn () => route('login'));
+        $middleware->redirectGuestsTo(fn () => route('login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

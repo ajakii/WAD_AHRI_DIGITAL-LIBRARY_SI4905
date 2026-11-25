@@ -12,14 +12,14 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // data anggota contoh (anggota dulu, soalnya users.nomor_kartu refer ke sini)
-            $contoh = [
+        $contoh = [
             ['2301010001', 'NADA NADIYA', 'Mahasiswa', 'Aktif'],
             ['2301010002', 'AZ ZAKY MUHARRAM', 'Mahasiswa', 'Belum Dicetak'],
             ['2301010003', 'M RIZKI RAMADHANI', 'Dosen', 'Nonaktif'],
             ['2301010004', 'TIMOTHY WILLBERT JACONIAS NARUA', 'Umum', 'Hilang'],
         ];
 
-           foreach ($contoh as [$nomor, $nama, $tipe, $status]) {
+        foreach ($contoh as [$nomor, $nama, $tipe, $status]) {
             Anggota::updateOrCreate(
                 ['nomor_kartu' => $nomor],
                 [
