@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -9,19 +8,19 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        return view('auth.login');
+        return Auth::check() ? redirect()->route('area.index') : view('auth.login');
     }
 
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'username' => ['required'],
-            'password' => ['required'],
+            'username' => 'required|string',
+            'password' => 'required|string',
         ]);
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended(route('anggota.index'));
+            return redirect()->intended(route('area.index'))->with('success', 'Login berhasil.');
         }
 
         return back()->withErrors([
@@ -34,6 +33,6 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('login');
+        return redirect()->route('login')->with('success', 'Anda berhasil logout.');
     }
 }

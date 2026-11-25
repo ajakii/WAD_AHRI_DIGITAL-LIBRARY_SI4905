@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Anggota;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -42,6 +42,19 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('anggota123'),
             'role' => 'anggota',
             'nomor_kartu' => '2301010001',
+        ]);
+
+        // user dari modul Fasilitas dan Area (Willbert)
+        User::updateOrCreate(['username' => 'petugas'], [
+            'password' => Hash::make('petugas123'),
+            'role' => 'petugas',
+            'nomor_kartu' => null,
+        ]);
+
+        User::updateOrCreate(['username' => 'pengguna'], [
+            'password' => Hash::make('pengguna123'),
+            'role' => 'pengguna',
+            'nomor_kartu' => null,
         ]);
     }
 }

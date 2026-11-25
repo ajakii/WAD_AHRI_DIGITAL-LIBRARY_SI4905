@@ -16,11 +16,15 @@
                 @csrf
                 <div class="mb-3">
                     <label class="form-label">Username</label>
-                    <input type="text" class="form-control" name="username" required value="{{ old('username') }}">
+                    <input type="text" class="form-control" name="username" required autofocus value="{{ old('username') }}">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Password</label>
                     <input type="password" class="form-control" name="password" required>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" name="remember" id="remember" value="1">
+                    <label class="form-check-label" for="remember">Ingat saya</label>
                 </div>
                 <button type="submit" class="btn btn-primary w-100 mb-2">Login</button>
                 <a href="{{ route('anggota.index') }}" class="btn btn-secondary w-100">Kembali ke Beranda</a>

@@ -1,35 +1,54 @@
 <?php
 
 use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\AreaController;
 use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
-// Publik: boleh dibuka tanpa login
-Route::get('/', [AnggotaController::class, 'index'])->name('anggota.index');
+// Halaman utama publik
+Route::get('/', [AreaController::class, 'index'])->name('area.index');
+Route::get('/anggota', [AnggotaController::class, 'index'])->name('anggota.index');
 
-// Hanya untuk yang BELUM login (halaman login)
+// Login (hanya untuk guest / belum login)
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.proses');
+    Route::post('/login', [AuthController::class, 'login'])
+        ->middleware('throttle:6,1')
+        ->name('login.proses');
 });
 
-// Hanya untuk yang SUDAH login
+// Route yang membutuhkan login
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Gate: khusus anggota yang punya kartu
+    // Modul Fasilitas & Area (Willbert)
+    Route::get('/area/tambah', [AreaController::class, 'create'])
+        ->can('tambah-area')
+        ->name('area.create');
+    Route::post('/area', [AreaController::class, 'store'])
+        ->can('tambah-area')
+        ->name('area.store');
+    Route::get('/area/{area}/edit', [AreaController::class, 'edit'])
+        ->can('edit-area')
+        ->name('area.edit');
+    Route::put('/area/{area}', [AreaController::class, 'update'])
+        ->can('edit-area')
+        ->name('area.update');
+    Route::delete('/area/{area}', [AreaController::class, 'destroy'])
+        ->can('hapus-area')
+        ->name('area.destroy');
+
+    // Modul Anggota (main)
     Route::get('/kartu-saya', [AnggotaController::class, 'kartuSaya'])
         ->name('anggota.kartu-saya')
         ->can('kartu-saya');
 
-    // Policy: admin (siapa pun) atau anggota (kartu sendiri)
     Route::get('/anggota/{anggota}/cetak', [AnggotaController::class, 'cetak'])
         ->name('anggota.cetak')
         ->can('cetak', 'anggota');
 
-    // Di dalam auth: dibatasi lagi berdasarkan peran
     Route::middleware('role:admin')->group(function () {
-        // Gate
         Route::get('/anggota/tambah', [AnggotaController::class, 'create'])
             ->name('anggota.create')
             ->can('kelola-anggota');
@@ -37,7 +56,6 @@ Route::middleware('auth')->group(function () {
             ->name('anggota.store')
             ->can('kelola-anggota');
 
-        // Policy
         Route::get('/anggota/{anggota}/edit', [AnggotaController::class, 'edit'])
             ->name('anggota.edit')
             ->can('update', 'anggota');
@@ -48,4 +66,14 @@ Route::middleware('auth')->group(function () {
             ->name('anggota.destroy')
             ->can('delete', 'anggota');
     });
+});
+
+// Tes koneksi database
+Route::get('/tes-koneksi', function () {
+    try {
+        DB::connection()->getPdo();
+        return 'DB berhasil connect!';
+    } catch (\Exception $e) {
+        return 'DB gagal connect: ' . $e->getMessage();
+    }
 });
