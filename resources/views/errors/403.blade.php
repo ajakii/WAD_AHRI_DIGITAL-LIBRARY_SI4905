@@ -12,6 +12,7 @@
 
 <div class="custom-card-box text-center">
     <h1 class="display-1 fw-bold text-danger">403</h1>
+    <h3 class="fw-bold mb-2">Akses Ditolak</h3>
     <p class="lead">{{ $pesan }}</p>
     <a href="{{ route('anggota.index') }}" class="btn btn-primary">Kembali</a>
 </div>

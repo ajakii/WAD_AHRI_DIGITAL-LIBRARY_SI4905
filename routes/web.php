@@ -3,12 +3,15 @@
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PengaduanController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 // Halaman utama publik
 Route::get('/', [AreaController::class, 'index'])->name('area.index');
 Route::get('/anggota', [AnggotaController::class, 'index'])->name('anggota.index');
+Route::get('/pengaduan', [PengaduanController::class, 'index'])->name('home');
+Route::post('/pengaduan', [PengaduanController::class, 'store'])->name('pengaduan.store');
 
 // Login (hanya untuk guest / belum login)
 Route::middleware('guest')->group(function () {
@@ -22,7 +25,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Modul Fasilitas & Area (Willbert)
+    // Modul Fasilitas & Area (Willbert / main)
     Route::get('/area/tambah', [AreaController::class, 'create'])
         ->can('tambah-area')
         ->name('area.create');
@@ -65,6 +68,36 @@ Route::middleware('auth')->group(function () {
         Route::delete('/anggota/{anggota}', [AnggotaController::class, 'destroy'])
             ->name('anggota.destroy')
             ->can('delete', 'anggota');
+    });
+
+    // Modul Pengaduan (NADA)
+    Route::middleware('can:akses-pengaduan')->group(function () {
+        Route::get('/daftar-aduan', [PengaduanController::class, 'daftar'])
+            ->name('pengaduan.daftar');
+
+        Route::get('/pengaduan/{pengaduan}/edit', [PengaduanController::class, 'edit'])
+            ->name('pengaduan.edit')
+            ->can('update', 'pengaduan');
+
+        Route::put('/pengaduan/{pengaduan}', [PengaduanController::class, 'update'])
+            ->name('pengaduan.update')
+            ->can('update', 'pengaduan');
+
+        Route::delete('/pengaduan/{pengaduan}', [PengaduanController::class, 'destroy'])
+            ->name('pengaduan.destroy')
+            ->can('delete', 'pengaduan');
+    });
+
+    Route::middleware('can:kelola-aduan')->group(function () {
+        Route::get('/admin/dashboard', function () {
+            return 'Halaman khusus Admin';
+        })->name('admin.dashboard');
+    });
+
+    Route::middleware('can:akses-customer')->group(function () {
+        Route::get('/customer/dashboard', function () {
+            return 'Halaman khusus Customer';
+        })->name('customer.dashboard');
     });
 });
 

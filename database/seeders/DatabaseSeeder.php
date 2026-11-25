@@ -11,7 +11,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // data anggota contoh (anggota dulu, soalnya users.nomor_kartu refer ke sini)
+        // Data anggota contoh (diisi lebih dulu karena users.nomor_kartu merujuk ke sini)
         $contoh = [
             ['2301010001', 'NADA NADIYA', 'Mahasiswa', 'Aktif'],
             ['2301010002', 'AZ ZAKY MUHARRAM', 'Mahasiswa', 'Belum Dicetak'],
