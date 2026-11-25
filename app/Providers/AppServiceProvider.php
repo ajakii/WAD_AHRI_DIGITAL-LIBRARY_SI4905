@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Gate;
 use App\Models\User;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,16 +16,15 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        Gate::define('akses-pengaduan', function (User $user) {
-            return $user->hasRole('admin', 'customer');
-        });
+        Paginator::useBootstrapFive();
 
-        Gate::define('kelola-aduan', function (User $user) {
-            return $user->hasRole('admin');
-        });
+        // Gate modul Area (sesuai routes/web.php)
+        Gate::define('tambah-area', fn (User $user) => $user->hasRole('admin', 'petugas'));
+        Gate::define('edit-area', fn (User $user) => $user->hasRole('admin', 'petugas'));
+        Gate::define('hapus-area', fn (User $user) => $user->hasRole('admin'));
 
-        Gate::define('akses-customer', function (User $user) {
-            return $user->hasRole('customer');
-        });
+        // Gate modul Anggota (dari main)
+        Gate::define('kelola-anggota', fn (User $user) => $user->hasRole('admin'));
+        Gate::define('kartu-saya', fn (User $user) => $user->hasRole('anggota') && $user->nomor_kartu !== null);
     }
 }

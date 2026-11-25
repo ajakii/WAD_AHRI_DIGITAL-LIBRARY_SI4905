@@ -11,7 +11,7 @@ class AuthController extends Controller
     public function showLogin()
     {
         if (Auth::check()) {
-            return redirect()->route('pengaduan.daftar');
+            return redirect()->route('anggota.index');
         }
 
         return view('auth.login');
@@ -29,13 +29,13 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             return redirect()
-                ->intended(route('pengaduan.daftar'))
+                ->intended(route('anggota.index'))
                 ->with('success', 'Selamat datang, ' . Auth::user()->username . '!');
         }
 
         return back()
             ->withErrors([
-                'username' => 'Username atau password salah.'
+                'username' => 'Username atau password salah.',
             ])
             ->onlyInput('username');
     }
@@ -49,7 +49,7 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()
-            ->route('home')
+            ->route('login')
             ->with('success', 'Anda berhasil logout.');
     }
 }

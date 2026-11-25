@@ -14,6 +14,7 @@ class User extends Authenticatable
         'username',
         'password',
         'role',
+        'nomor_kartu',
     ];
 
     protected $hidden = [
@@ -26,6 +27,16 @@ class User extends Authenticatable
         return [
             'password' => 'hashed',
         ];
+    }
+
+    public function anggota()
+    {
+        return $this->belongsTo(Anggota::class, 'nomor_kartu', 'nomor_kartu');
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
     }
 
     public function hasRole(string ...$roles): bool
