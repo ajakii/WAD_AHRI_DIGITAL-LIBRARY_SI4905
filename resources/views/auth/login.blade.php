@@ -1,16 +1,35 @@
 @extends('layouts.app')
-@section('title', 'Login Admin')
+
+@section('title', 'Login - Perpustakaan Digital')
+
 @section('content')
-    <section class="card form-card">
-        <h1>Login Admin</h1>
-        <p>Masuk untuk mengedit dan menghapus data fasilitas area.</p>
-        <form method="POST" action="{{ route('login.proses') }}">@csrf
-            <label for="username">Username</label><input id="username" name="username" value="{{ old('username') }}"
-                autocomplete="username" required autofocus>
-            <label for="password">Password</label><input id="password" type="password" name="password"
-                autocomplete="current-password" required>
-            <label class="check"><input type="checkbox" name="remember" value="1"> Ingat saya</label><button
-                type="submit">Masuk</button>
-        </form>
-    </section>
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="custom-card-box p-4 bg-white shadow-sm">
+            <h3 class="mb-3 text-center">Login</h3>
+
+            @if($errors->any())
+                <div class="alert alert-danger">{{ $errors->first() }}</div>
+            @endif
+
+            <form action="{{ route('login.proses') }}" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" name="username" required autofocus value="{{ old('username') }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" required>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" name="remember" id="remember" value="1">
+                    <label class="form-check-label" for="remember">Ingat saya</label>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mb-2">Login</button>
+                <a href="{{ route('anggota.index') }}" class="btn btn-secondary w-100">Kembali ke Beranda</a>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection

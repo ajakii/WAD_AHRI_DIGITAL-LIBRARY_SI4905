@@ -7,22 +7,25 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\User;
+use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        if (!Auth::check()) {
+        $user = $request->user();
+
+        // 1. Belum login = Arahkan ke halaman login
+        if (! $user) {
             return redirect()->route('login');
         }
 
-        /** @var User|null $user */
-$user = Auth::user();
-
-        if (!$user || !$user->hasRole(...$roles)) {
-            abort(403, 'Anda tidak memiliki akses.');
+        // 2. Sudah login, tapi perannya tidak ada di daftar = Tolak
+        if (! $user->hasRole(...$roles)) {
+            abort(403, 'Kamu tidak punya hak akses ke halaman ini.');
         }
 
+        // 3. Lolos: lanjut ke controller
         return $next($request);
     }
 }
