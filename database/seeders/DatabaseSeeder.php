@@ -43,5 +43,18 @@ class DatabaseSeeder extends Seeder
             'role' => 'anggota',
             'nomor_kartu' => '2301010001',
         ]);
+
+        // user dari modul Fasilitas dan Area (Willbert)
+        User::updateOrCreate(['username' => 'petugas'], [
+            'password' => Hash::make('petugas123'),
+            'role' => 'petugas',
+            'nomor_kartu' => null,
+        ]);
+
+        User::updateOrCreate(['username' => 'pengguna'], [
+            'password' => Hash::make('pengguna123'),
+            'role' => 'pengguna',
+            'nomor_kartu' => null,
+        ]);
     }
 }

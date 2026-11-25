@@ -11,7 +11,7 @@ class AuthController extends Controller
     public function showLogin()
     {
         if (Auth::check()) {
-            return redirect()->route('anggota.index');
+            return redirect()->route('area.index');
         }
 
         return view('auth.login');
@@ -29,7 +29,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             return redirect()
-                ->intended(route('anggota.index'))
+                ->intended(route('area.index'))
                 ->with('success', 'Selamat datang, ' . Auth::user()->username . '!');
         }
 

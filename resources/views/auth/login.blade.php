@@ -23,7 +23,7 @@
                     <input type="password" class="form-control" name="password" required>
                 </div>
                 <div class="form-check mb-3">
-                    <input type="checkbox" name="remember" value="1" class="form-check-input" id="remember">
+                    <input class="form-check-input" type="checkbox" name="remember" id="remember" value="1">
                     <label class="form-check-label" for="remember">Ingat saya</label>
                 </div>
                 <button type="submit" class="btn btn-primary w-100 mb-2">Login</button>
